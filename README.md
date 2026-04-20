@@ -1,142 +1,17 @@
-🔧 Station Météorologique Arduino
-📌 Description du Projet
+# Arduino Weather Station
 
-Ce projet implémente une station météorologique complète basée sur Arduino. Le système permet de collecter, enregistrer et surveiller diverses données environnementales telles que la température, l'humidité, la pression atmosphérique et la luminosité.
+This project is an embedded weather station built with Arduino. It collects environmental data such as temperature, humidity, pressure and light intensity, and logs them into files on an SD card with timestamps using a real-time clock.
 
-Les données sont enregistrées sur une carte SD avec un horodatage précis grâce à une horloge temps réel.
+I worked on this project to get hands-on experience with embedded systems, especially sensor integration, data acquisition and basic system design on a microcontroller.
 
-🧰 Matériel Requis
+The hardware setup includes a BME280 sensor for temperature, humidity and pressure measurements, a DS3231 RTC module for timekeeping, and an SD card module for data logging. A simple analog light sensor is used for luminosity readings. Two push buttons are used to control the system modes, and a chainable RGB LED provides visual feedback about the system state and possible errors.
 
-Pour réaliser ce projet, nous avons besoin des composants suivants :
+The software is written in C++ using the Arduino framework. The program handles communication with multiple components (I2C and SPI), reads sensor data at regular intervals, formats it, and stores it into log files. It also includes basic error handling, for example when a sensor or the SD card is not detected.
 
-Une carte Arduino compatible (idéalement Arduino Uno ou Nano)
-Un capteur BME280 (température, humidité, pression – I2C adresse 0x76)
-Un module RTC DS3231 pour l’horodatage
-Un module carte SD (interface SPI, CS sur la broche 4)
-Deux boutons poussoirs :
-Rouge → broche 3
-Vert → broche 2
-Une LED RGB chainable (broches 7 et 8)
-Un capteur de luminosité analogique (A0)
-⚙️ Installation et Configuration
+Several operating modes are implemented. In standard mode, the system logs data at a fixed interval. An eco mode reduces the frequency of measurements to save power. A maintenance mode allows real-time monitoring without writing to the SD card. A configuration mode is available at startup and allows parameters to be changed via the serial monitor (such as logging interval or date/time settings).
 
-Nous devons installer plusieurs bibliothèques nécessaires au fonctionnement du projet.
+Data is stored in a simple text format, with each line containing a timestamp followed by the measured values. Log files are created daily, which makes the data easy to analyze or reuse later.
 
-Ouvrons le gestionnaire de bibliothèques dans l’IDE Arduino :
-Croquis → Inclure une bibliothèque → Gérer les bibliothèques
-Installons les bibliothèques suivantes :
-Wire
-Adafruit Unified Sensor
-Adafruit BME280
-RTClib
-SD
-EEPROM (incluse par défaut)
-ChainableLED
-Créons un dossier nommé meteo et plaçons-y le fichier meteo.ino.
-Sélectionnons :
-La carte Arduino (menu Outils)
-Le port série
-Téléversons le programme.
-🔌 Câblage des Composants
-BME280 (I2C)
-SDA → A4
-SCL → A5
-VCC → 3.3V/5V
-GND → Masse
-RTC DS3231
-SDA → A4
-SCL → A5
-VCC → 5V
-GND → Masse
-Module SD
-CS → 4
-MOSI → 11
-MISO → 12
-SCK → 13
-Boutons
-Rouge → broche 3
-Vert → broche 2
-👉 Connectés à la masse (INPUT_PULLUP)
-LED RGB
-DI → 7
-CI → 8
-Capteur de luminosité
-Signal → A0
-🔄 Modes de Fonctionnement
+The project is currently implemented in a single file, but it could be improved by splitting the code into multiple modules (sensor management, logging, configuration), which would make it easier to maintain and extend. Other possible improvements include adding a display (LCD or OLED), integrating wireless communication (WiFi or Bluetooth), or optimizing power consumption further.
 
-Le système propose quatre modes :
-
-🟢 Mode Standard
-Enregistrement des données selon un intervalle défini
-🟡 Mode Configuration
-Modification des paramètres via le port série
-🔵 Mode Économique
-Mesures moins fréquentes pour économiser l’énergie
-🟠 Mode Maintenance
-Affichage temps réel sans enregistrement
-🎮 Utilisation des Boutons
-
-Nous utilisons les boutons pour naviguer entre les modes :
-
-Appui long bouton vert → mode Économique
-Appui long bouton rouge → mode Maintenance
-Maintien bouton rouge au démarrage → mode Configuration
-💻 Configuration via Port Série
-
-Nous utilisons le moniteur série (9600 bauds).
-
-Commandes principales :
-
-HELP → liste des commandes
-CONFIG → afficher configuration
-LOG_INTERVAL → intervalle d’enregistrement
-CLOCK → régler l’heure
-DATE → régler la date
-RESET → paramètres par défaut
-📊 Format des Données
-
-Chaque ligne contient :
-
-JJ/MM/AAAA HH:MM:SS / Temp / Humidité / Pression / Altitude / Luminosité
-
-Les fichiers sont nommés :
-
-AAMMJJ_N.LOG
-⚠️ Gestion des Erreurs
-
-Le système détecte automatiquement les erreurs :
-
-RTC non détecté → LED rouge/bleu
-BME280 absent → LED rouge/vert
-Carte SD absente → LED rouge/blanc
-Données aberrantes → clignotements rouge/vert
-🔧 Configuration par Défaut
-Intervalle : 10 minutes
-Taille fichier : 4 Ko
-Timeout : 30 secondes
-Tous les capteurs activés
-🛠️ Dépannage
-
-Si un problème survient, nous vérifions :
-
-Les connexions
-L’alimentation
-La carte SD (format FAT32)
-La pile du RTC
-🚀 Améliorations Possibles
-
-Nous pouvons améliorer ce projet en ajoutant :
-
-Un écran LCD/OLED
-WiFi ou Bluetooth
-Capteurs supplémentaires
-Interface web
-Mode basse consommation
-⚙️ Informations Techniques
-Version : 2.4
-I2C : 100 kHz
-EEPROM : stockage persistant
-Interruptions matérielles pour boutons
-📄 Licence
-
-Ce projet est fourni tel quel. Nous sommes libres de le modifier et de l’améliorer.
+This project is not meant to be a production-ready system, but rather a practical learning project to explore embedded programming and system integration.
